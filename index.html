@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Simple music player</title>
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	</head>
+	<body>
+	<style>
+	@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Sacramento&display=swap');
+
+html{
+	  scroll-behavior: smooth;
+	  width:60%;
+	 margin-left:20%;
+	 margin-top:10px;
+	 background:#DDD;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	background:#fff;
+	background-size: cover;
+	background-position: center;
+	min-height: 1000vh;
+   font-family: 'Roboto', sans-serif;
+	-webkit-touch-callout: none;	
+	-webkit-user-select: none; 
+	-khtml-user-select: none; 
+	-moz-user-select: none; 
+	-ms-user-select: none; 
+	-o-user-select: none; 
+	user-select: none; 
+}
+
+.header ul {
+	display:block;
+	position:absolute;   
+	width:100%;
+	left:-30px;
+	top: 40px;
+	} 
+
+.header ul li{
+	list-style-type:none;
+	position:relative;
+	padding:8px 0 8px 15px;
+	margin-bottom:5px;
+	font-size:12px;
+	cursor:pointer;
+	width: 90%;
+} 
+.header ul li i{
+	padding-right:15px;
+}
+.header ul li a{
+	text-decoration: none;
+	color: #222;
+	font-size: 16px;
+	}
+.header ul li:hover{
+	background-color: #ff6f62;
+}
+
+.container{
+	padding: 15px;
+	box-sizing: border-box;
+	width: 450px;
+	min-height: 100vh;
+   padding-bottom: 100px;
+	background: #f5f5f5;
+	position: relative;
+	z-index: 1;
+	box-shadow: 0 6px 6px #333;
+	margin-right:0;
+	float:right;
+	margin-top:280px;
+	}
+
+.card{
+	background: #ffffff;
+	width:100%;
+	display: flex;
+	justify-content: space-between;
+	border-radius: 5px;
+	box-shadow: 0 1px 3px #757575;
+	overflow: hidden;
+	margin-bottom: 20px;
+}
+
+
+.title{
+	font-size:18px;
+	margin: 8px;
+	width:  width:65%;
+	 margin-left:20%; ;
+	word-break: nowrap;
+	overflow: hidden;
+white-space: nowrap;
+text-overflow: ellipsis;
+font-weight: bold;
+ 
+
+}
+
+.author{
+	margin: 0 0 0 15px;
+	color: #757575;
+	 width: calc(100%-20px);
+	word-break: nowrap;
+	overflow: hidden;
+white-space: nowrap;
+text-overflow: ellipsis;
+font-size: 15px;
+}
+
+.control{
+	width: 100%;
+	text-align: center;
+}
+
+.panel{
+	width: calc(100% - 150px);
+}
+
+.image img{
+	width: 150px;
+	min-height: 100%;
+	object-fit: cover;
+	line-height: 0;
+}
+
+.panel button{
+	background: transparent;
+	border: none;
+	outline: none;
+	color: #757575;
+}
+
+.panel .playbtn{
+	transform: scale(1.5);
+	text-align: center;
+}
+
+
+.control{
+	margin: 40px 0 20px 0px;
+}
+
+
+.banner{
+	width: 758px;
+	height: 260px;
+	background: url(https://cdn.pixabay.com/photo/2016/11/23/00/58/record-player-1851576_1280.jpg);
+	background-size: cover;
+	background-position: center;
+	z-index: 0;
+	position: absolute;
+	top: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+nav{
+	width: 60%;
+	height: 55px;
+	display: flex;
+	justify-content: space-between;
+	position: fixed;
+	top: 0;
+	left: 20%;
+	z-index: 3;
+	transition: 0.5s;
+}
+
+.icon{
+	width: 55px;
+	height: 55px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+}
+
+.text{
+	color: #fff;
+	text-shadow: 0 0 15px #000;
+	font-size: 30px;
+	font-family: 'Sacramento', cursive;
+	text-align: left;
+	}
+
+
+
+.searchbar{
+	width: 60%;
+	height: 55px;
+	background: #fff;
+	display: flex;
+	position: fixed;
+	top: 0;
+	left:20%;
+	right: -100%;
+	z-index: 4;
+	transition: 0.5s;
+}
+
+.icon{
+	min-width: 55px;
+}
+
+.back{
+	color: #07CFD4;
+}
+
+#inp{
+	border: none;
+	outline: none;
+	width: 100%;
+	
+}
+
+.loadingmusic{
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	z-index: 7;
+	background: #ff6f62;
+	color:green;
+	width: 100%;
+	height: 36px;
+	transform: scaleY(0);
+	transition: 0.5s;
+	transform-origin: bottom;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.loader div:nth-child(1){
+	animation-name: colorchange;   
+	animation-duration: 1s; 
+	animation-delay: 0s;  
+	animation-iteration-count: infinite;
+	-webkit-animation-name: colorchange;   
+	-webkit-animation-duration: 1s; 
+	-webkit-animation-delay: 0s;  
+	-webkit-animation-iteration-count: infinite;
+	transition: 1s;
+}
+
+.loader div:nth-child(2){
+	animation-name: colorchange;   
+	animation-duration: 1s; 
+	-webkit-animation-delay: 0.08s;  
+	-webkit-animation-iteration-count: infinite;
+	transition: 1s;
+}
+
+.loader div:nth-child(3){
+	animation-name: colorchange;   
+	animation-duration: 1s; 
+	animation-delay: 0.16s;  
+	animation-iteration-count: infinite;
+	-webkit-animation-name: colorchange;   
+	-webkit-animation-duration: 1s; 
+	-webkit-animation-delay: 0.16s;  
+	-webkit-animation-iteration-count: infinite;
+	-webkit-transition: 8s;
+}
+
+.loader div:nth-child(4){
+	animation-name: colorchange;   
+	animation-duration: 1s; 
+	animation-delay: 0.24s;  
+	animation-iteration-count: infinite;
+	-webkit-animation-name: colorchange;   
+	-webkit-animation-duration: 1s; 
+	-webkit-animation-delay: 0.24s;  
+	-webkit-animation-iteration-count: infinite;
+	-webkit-transition: 8s;
+}
+
+
+.loader div:nth-child(5){
+	animation-name: colorchange;   
+	animation-duration: 1s; 
+	animation-delay: 0.32s;  
+	animation-iteration-count: infinite;
+	-webkit-animation-name: colorchange;   
+	-webkit-animation-duration: 1s; 
+	-webkit-animation-delay: 0.32s;  
+	-webkit-animation-iteration-count: infinite;
+	-webkit-transition: 8s;
+}
+
+.loader div:nth-child(6){
+	animation-name: colorchange;   
+	animation-duration: 1s; 
+	animation-delay: 0.40s;  
+	animation-iteration-count: infinite;
+	-webkit-animation-name: colorchange;   
+	-webkit-animation-duration: 1s; 
+	-webkit-animation-delay: 0.40s;  
+	-webkit-animation-iteration-count: infinite;
+	-webkit-transition: 8s;
+}
+
+.loader div:nth-child(7){
+	animation-name: colorchange;   
+	animation-duration: 1s; 
+	animation-delay: 0.48s;  
+	animation-iteration-count: infinite;
+	-webkit-animation-name: colorchange;   
+	-webkit-animation-duration: 1s; 
+	-webkit-animation-delay: 0.48s;  
+	-webkit-animation-iteration-count: infinite;
+	-webkit-transition: 8s;
+}
+
+.loader div:nth-child(8){
+	animation-name: colorchange;   
+	animation-duration: 1s; 
+	animation-delay: 0.56s;  
+	animation-iteration-count: infinite;
+	-webkit-animation-name: colorchange;   
+	-webkit-animation-duration: 1s; 
+	-webkit-animation-delay: 0.56s;  
+	-webkit-animation-iteration-count: infinite;
+	-webkit-transition: 8s;
+}
+
+@keyframes colorchange {
+   0% {
+	background: #07CFD4;
+	}
+	50% { 
+	background: #fff;
+	}
+	100% { 
+	background: #07CFD4;
+	}
+}
+@-webkit-keyframes colorchange {
+	0% {
+	background: #07CFD4;
+	}
+	50% { 
+	background: #fff;
+	}
+	100% { 
+	background: #07CFD4;
+	}
+}
+
+
+.loader div{
+	width: 10px;
+	height: 10px;
+	background: #07CFD4;
+	
+	border-radius: 0px;
+	float: right;
+}
+
+
+.drop{
+	width: 250px;
+	height: 100vh;
+	background: #f5f5f5;
+	box-shadow: 0 0 10px #0009;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	top: 0;
+	left: -300px;
+	z-index: 8;
+	transition: 0.5s;
+}
+
+.crossm{
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 20px;
+	font-size: 20px;
+	color: #07CFD4;
+}
+preloader{
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 10;
+	background: #f5f5f5;
+}
+.loaders{
+	width: 35px;
+	height: 35px;
+	border-top: 4px solid #07CFD4;
+	border-bottom: 4px solid #07CFD4;
+	border-left: 4px solid #07CFD4;
+	border-right: 4px solid transparent;
+	border-radius: 100px;
+	
+	animation: load 10s linear infinite;
+}
+
+@keyframes load {
+   
+   0% {
+	transform: rotate(0deg);
+	
+	}
+	100% {
+	transform: rotate(3600deg);
+	
+	}
+	 
+	
+}
+@-webkit-keyframes load {
+	
+	0% {
+	transform: rotate(0deg);
+	
+	}
+	100% {
+	transform: rotate(3600deg);
+	
+	}
+	 
+}	animation-delay: 0.08s;  
+	animation-iteration-count: infinite;
+	-webkit-animation-name: colorchange;   
+	-webkit-animation-duration: 1s; 
+
+}
+@media only screen and (max-width:1000px){
+   html{
+   width:60%;
+   }
+   .container{
+	width:60%;
+   }
+   nav{
+   width:60%;
+   }
+}
+@media only screen and (max-width:768px){
+   html{
+   width:100%;
+   padding:0;
+   margin:0;
+   }
+   .container{
+	margin-right:0;
+	width:390px;
+   }
+   nav{
+   width:96%;
+   height: 55px;
+	display: flex;
+	justify-content: space-between;
+	position: fixed;
+	top: 0;
+	left: 20%;
+	z-index: 3;
+	transition: 0.5s;
+   }
+   .searchbar{
+	width: 100%;
+	height: 55px;
+	display: flex;
+	position: fixed;
+	top: 0;
+	left:0;
+	right: -100%;
+	z-index: 4;
+	transition: 0.5s;
+}
+.banner{width:100%}
+   
+}
+	
+	</style>
+	
+	
+	<div id="drop" class="drop">
+	
+	<div onclick="closem()" class="crossm">
+	
+	&#9587;
+		
+	</div>
+	
+	
+
+	  <div class="header">
+			<div class="cover">
+			
+				
+		   </div>
+
+<ul>
+<li><a href="https://m.soundcloud.com/"><i class="fa fa-music"></i>listin on soundcloud</li>
+
+<li><a href="#"><i class="fa fa-star"></i> Top Charts</a></li>
+
+<li><a href="#"><i class="fa fa-exclamation-circle"></i> New Releases</a></li>
+
+<li><a href="#"><i class="fa fa-folder"></i> Music Library</a></li>
+
+<li><a href="#"><i class="fa fa-search"></i> Browse</a></li>
+
+<li><a href="#"><i class="fa fa-sliders"></i>setting</a></li>
+
+<li><a href="#"><i class="fa fa-question"></i> Help & Feedback</a></li>
+			</ul>
+		
+		
+	</div>
+		
+	</div>
+	
+	
+	<nav id="nav">
+		
+		<div onclick="openm()" class="menu icon">
+			 <i class="material-icons">menu</i>
+		</div>
+		
+		<div onclick="opensearch()" class="search icon">
+		
+		<i class="material-icons">search</i>
+			
+		</div>
+		
+	</nav>
+	
+	
+	
+	
+	<div id="sbar" class="searchbar">
+		
+		<div onclick="closesearch()" class="back icon">
+		
+		<i class="material-icons">arrow_back</i>
+			
+		</div>
+		
+		<input oninput="search()" placeholder="Search music..." id="inp"/>
+		
+		
+	</div>
+	
+	
+	
+	<div class="banner">
+	
+	<div id="text" class="text">
+		Simple App Music
+	</div>
+		
+	</div>
+	
+	<div id="container" class="container">
+		
+	 </div>
+	 
+	 
+	 <div id="loadmusic" class="loadingmusic">
+	 
+
+	 
+	 <div class="loader">
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+				<div></div>
+			</div>
+		 
+	 </div>
+	 
+	 
+	 
+			<div id="pre" class="preloader">
+				
+				<div class="loaders">
+					
+				</div>
+				
+				
+			</div>
+<script type="text/javascript">
+
+
+var markup = function(id, name, author, image){
+	
+	return `
+	
+	
+	<div class="card">
+		
+		<div class="panel">
+		
+		<div class="title">
+			${name}
+		</div>
+		
+		<div class="author">
+			${author}
+		</div>
+		
+		<div class="control">
+			
+			<button onclick="mint()" class="prev">
+			
+			<i class="material-icons">fast_rewind</i>
+				
+				
+			</button>
+			
+			<button id="playbtn${id}" onclick="play(this, ${id})" class="playbtn">
+			
+			<i class="material-icons">play_arrow</i>
+				
+			</button>
+			
+			<button onclick="maxt()" class="next">
+			
+			 <i class="material-icons">fast_forward</i>
+				
+			</button>
+			
+		</div>
+			
+		</div>
+		
+		<div class="image">
+		
+		<img src="${image}"/>
+			
+		</div>
+		
+			
+		</div>
+		
+		
+		`;
+	
+};
+
+var aud = new Audio(); 
+
+var lastsong = null;
+
+
+	
+
+var songs = [
+//	1
+
+{
+  name:"الوئام الخمسة",
+  artist:"الملاك",
+  poster:"https://assets.change.org/photos/5/wy/oj/UnwYOjvXkwfnDFg-800x450-noPad.jpg?1529641017",
+  song:"https://cdn2.mzmdl.com/music/20170830/muzmo_ru_Fifth_Harmony_-_Angel_47827051.mp3",
+  isPlay:false
+},
+
+
+{
+	name: "Turkish march",
+	artist: "Wolfgang Amadeus Mozart",
+	poster: "https://cdn.pixabay.com/photo/2014/05/21/15/47/piano-349928_1280.jpg",
+
+	song: "https://getuserip.000webhostapp.com/Turkish%20March.mp3",
+	isPlay: false
+},
+
+//   2
+
+{
+	name: "Dance of the knights",
+	artist: "Sergey Prokofiev",
+	poster: "https://cdn.pixabay.com/photo/2016/12/25/22/32/gladiator-1931077_1280.jpg",
+   song: "https://getuserip.000webhostapp.com/Prokofiev%20Dance%20Of%20The%20Knights.mp3",
+	isPlay: false
+},
+//2 كاظم الساهر
+{
+   name:"كاظم الساهر",
+   artist:"يا الريح الى لبنان",
+   poster:"https://static.arageek.com/wp-content/uploads/2017/09/Kathem-Al-Saher-1.jpg",
+   song:"https://ds.mzmdl.com/get/music/20200119/muzmo_ru_Kadim_Al_Saher_-_Ya_Rayeh_Ila_Lebnan_68037222.mp3",
+   isPlay:false
+	
+},
+
+
+//  3
+
+{
+   name:"Faded",
+   artist:"Alan Walker",
+   poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTAw24OSbOJ8Y8VwsqnjROI2mzhghCF508FHn7BqvwZIEgy8Uql",
+   song:"http://drive.funados-radio.fr/playlist/HITS%20DU%20MOMENT/Alan%20Walker%20-%20Faded.mp3",
+   isPlay:false
+	
+},
+
+//	4
+
+{
+   name:"Ed Sheeran",
+   artist:"Shape Of You",
+   poster:"https://talenthouse-res.cloudinary.com/image/upload/c_limit,fl_progressive,h_1280,w_1280/v1536341203/user-924417/profile/vefyodn9xhvjcapxjb8r.jpg",
+   song:"http://dl2.djring.com/lq.djring.com/48/479068/Shape%20of%20You%20-%20Ed%20Sheeran%20(DJJOhAL.Com).mp3",
+   isPlay:false
+	
+},
+//   5
+
+{
+   name:"Justin Bieber",
+   artist:"Sorry",
+   poster:"https://m.media-amazon.com/images/I/81zfnT35gAL._SS500_.jpg",
+   song:"http://muzmo.ru/get/cuts/68/74/6874f6b14e2ed29e8dea00b738df6994/35325295/muzmo_ru_Justin_Bieber_-_Sorry_b64f0d200.mp3",
+   isPlay:false
+	
+},
+//	6
+
+{
+   name:"Luis Fonsi ft. Daddy Yankee",
+   artist:"Despacito",
+   poster:"https://m.media-amazon.com/images/I/71DAw1xc4HL._SS500_.jpg",
+   song:"http://muzmo.ru/get/cuts/43/63/436396cab550cf0dbf1012275d31b0d0/44349715/muzmo_ru_Luis_Fonsi_-_Despacito_feat_Daddy_Yankee_b64f0d227.mp3?sid=pag3vijoeg5kipr8mh689lfom0",
+   isPlay:false
+	
+},
+//7
+
+{
+   name:"Bailando",
+   artist:"Enrique Iglesias",
+   poster:"http://68.media.tumblr.com/tumblr_n8sc1tbK3K1qzj8czo1_1405480962_cover.jpg",
+   song:"http://mr-risky.com/dren/music/data/Hollywood_Music/201412/Best_Of_October_2014/48/Bailando.mp3/Bailando.mp3",
+   isPlay:false
+	
+},
+//8
+
+{
+   name:"Ellie goulding",
+   artist:"Love me like you do",
+   poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQK2orVUIz3to5OKRaLWQHRWsuYLpT5Q_pgoAxQCMtYUxhV0ZSA",
+   song:"http://muzmo.ru/get/cuts/b0/f9/b0f90e9681ef28b41cf69cbbebc3c96e/46753429/muzmo_ru_Ellie_Goulding_-_Love_Me_Like_You_Do_b64f0d250.mp3?sid=bs3ap04k6msi3c9ashavk2erm5",
+   isPlay:false
+	
+},
+
+//9
+{
+   name:"Eminem",
+   artist:"Love the way you lie",
+   poster:"http://www.free-youtube-mp3.com/wp-content/uploads/2011/10/Eminem-Love-the-Way-You-Lie1.jpg",
+   song:"http://48.myjatti.in/48-345794/Love%20The%20Way%20You%20Lie.mp3",
+   isPlay:false
+	
+},
+//10
+{
+   name:"Akon Ft Emenim",
+   artist:"Smack that",
+   poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQY9q64a1DdLsaP2a-EBSBwI6E-q8Fvy5oYUJINrizQ-NhmPxop",
+   song:"https://ds.cdn3.mzmdl.com/music/20190604/muzmo_ru_Akon_Eminem_-_Smack_That_64767700.mp3",
+   isPlay:false
+	
+},
+//11
+
+{
+   name:"Zara larsson",
+   artist:"",
+   poster:"https://is5-ssl.mzstatic.com/image/thumb/Music123/v4/2f/21/a3/2f21a3ad-23c1-582c-673a-317111d59e0b/pr_source.png/800x800bb.jpeg",
+   song:"https://ds.cdn4.mzmdl.com/music/20170830/muzmo_ru_Zara_Larsson_Wizkid_Zara_Larsson_feat_WizKid_-_Sundown_47835118.mp3",
+   isPlay:false
+	
+},
+//12
+
+{
+   name:"Justin Bieber",
+   artist:"yaeh",
+   poster:"https://images.genius.com/77b20a9c80f09220020c33010ea5dcba.1000x1000x1.jpg",
+   song:"https://cdn1.mzmdl.com/music/20200208/muzmo_ru_Justin_Bieber_Quavo_-_Intentions_68303372.mp3",
+   isPlay:false
+	
+},
+//13
+{
+   name:"sum smith",
+   artist:"new song",
+   poster:"https://t2.genius.com/unsafe/220x220/https%3A%2F%2Fimages.genius.com%2Fe5cb8a74c657fb8cd7525512582e9868.1000x1000x1.jpg",
+   song:"https://cdn1.mzmdl.com/music/20200215/muzmo_ru_Sam_Smith_-_To_Die_For_68398335.mp3",
+   isPlay:false
+	
+},
+
+//14
+{
+   name:"Zara larsson",
+   artist:"yen 1 artist",
+   poster:"https://thumbor.forbes.com/thumbor/fit-in/416x416/filters%3Aformat%28jpg%29/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F5a4e771ea7ea436f32af8fae%2F0x0.jpg%3Fbackground%3D000000%26cropX1%3D679%26cropX2%3D2255%26cropY1%3D147%26cropY2%3D1724",
+   song:"https://cdn5.mzmdl.com/music/20190528/muzmo_ru_Clean_Bandit_Zara_Larsson_-_Symphony_64571636.mp3",
+   isPlay:false
+	
+},
+//15
+
+{
+   name:"summer walker",
+   artist:"Yummy",
+   poster:"https://66.media.tumblr.com/33a72634d5b1b56218d2d7b4e9b8fcd3/tumblr_inline_ph2fn6ZmHM1s9on4d_540.jpg",
+   song:"https://cdn2.mzmdl.com/music/20200215/muzmo_ru_Justin_Bieber_Summer_Walker_-_Yummy_68398351.mp3",
+   isPlay:false
+	
+},
+
+//16
+
+{
+   name:"Blue lagoon",
+   artist:"",
+   poster:"https://media.senscritique.com/media/000016593637/source_big/The_Blue_Lagoon_Bande_Originale.jpg",
+   song:"https://mzmdl.com/get/music/20190514/muzmo_ru_Gringo_Nimo_-_Blue_Lagoon_64192707.mp3",
+   isPlay:false
+	
+},
+//17
+
+{
+  name:"Chab Bilal",
+  artist:"لحنا له",
+  poster:"http://www.chartsinfrance.net/covers/aHR0cHM6Ly9pLnNjZG4uY28vaW1hZ2UvYzdiNWNkMmUwMjU5ODk4ZDE5MTVkZDkwNzdiY2QwMzI2ODQ4ZjRjNQ==.jpg",
+  song:"https://mzmdl.com/get/music/20180915/muzmo_ru_Cheb_Bilal_-_Lahna_La_Lhih_58880085.mp3",
+  isPlay:false
+},
+
+{
+  name:"Chab Bilal",
+  artist:"سست ادير",
+  poster:"https://image.winudf.com/v2/image1/Y29tLmFnaGFuaS5jaGViYmlsYWxfc2NyZWVuXzBfMTU0OTAyNDQzM18wODI/screen-0.jpg?h=355&fakeurl=1&type=.jpg",
+  song:"https://mzmdl.com/get/music/20180920/muzmo_ru_Cheb_Bilal_-_Cest_Dire_59017744.mp3",
+  isPlay:false
+},
+
+{
+  name:"samira said",
+  artist:"ناه غاري المشاكل",
+  poster:"https://static.arageek.com/wp-content/uploads/2018/04/3816722_1472118191.jpg",
+  song:"https://ds.cdn3.mzmdl.com/music/20170918/muzmo_ru_Samira_Said_Amazigh_-_Nach_Ghari_Lmachakil_48649334.mp3",
+  isPlay:false
+},
+
+{
+  name:"Music Arab",
+  artist:"اغنية عرب",
+  poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcT4NswPo_jk0DR52LRrwoBq8ZxzmiGdzlr-WjqV6fG38iF1ucfo",
+  song:"https://mzmdl.com/get/music/20190410/muzmo_ru_Next_Muzic_-_Arabic_Music_63407719.mp3",
+  isPlay:false
+},
+
+
+
+{
+  name:"tyo a 21",
+  artist:"twenty one pilot",
+  poster:"https://lastfm.freetls.fastly.net/i/u/770x0/4acf388a2f79da79f91983fa140e906d.jpg",
+  song:"https://ds.cdn5.mzmdl.com/music/20170830/muzmo_ru_Twenty_One_Pilots_-_Heavydirtysoul_47828698.mp3",
+  isPlay:false
+},
+
+{
+  name:"Jenifer Lopez",
+  artist:"Aint it fanny",
+  poster:"https://resize-elle.ladmedia.fr/r/625,,forcex/crop/625,625,center-middle,forcex,ffffff/img/var/plain_site/storage/images/beaute/cheveux/stars/jennifer-lopez-sa-nouvelle-coupe-de-cheveux-pour-le-super-bowl-2020-3843346/92545021-1-fre-FR/Jennifer-Lopez-sa-nouvelle-coupe-de-cheveux-pour-le-Super-Bowl-2020.jpg",
+  song:"https://mzmdl.com/get/music/20190315/muzmo_ru_Jenifer_Lopez_-_Aint_it_Funny_62805723.mp3",
+  isPlay:false
+},
+
+
+{
+  name:"Zara Larsson",
+  artist:"My self",
+  poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTWx_NpfSrxeoynfWq7ojUpck-MqM9-NMjWoIQGYOT3z_xXGhTk",
+  song:"https://cdn1.mzmdl.com/music/20190301/muzmo_ru_Zara_Larson_-_Myself_62500599.mp3",
+  isPlay:false
+},
+
+{
+  name:"Pit Bull Jemmy . Joker",
+  artist:"Rap",
+  poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTh7xZVw55E7LGlFSkMAWPrnoEghxgVNMG04_XUJ-s4dz6nqN1T",
+  song:"https://cdn2.mzmdl.com/music/20190928/muzmo_ru_Pitbull_Johnyboy_Ludacris_Prince_Royce_Jimmy_Joker_Iamchino_-_Tell_Me_Again_66767431.mp3",
+  isPlay:false
+},
+
+{
+  name:"Joker",
+  artist:"Yo soy",
+  poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTn2iKs3ewRkAdCA5lJXo3aPWmVsEXFj2X_-4lztUCN3uM_N88y",
+  song:"https://ds.cdn5.mzmdl.com/music/20190226/muzmo_ru_Joker_Beats_Khea_Beats_-_Yo_soy_62405158.mp3",
+  isPlay:false
+},
+
+{
+  name:"روائع الطرب",
+  artist:"موسيقى سان",
+  poster:"https://upload.wikimedia.org/wikipedia/en/3/3e/Themusic.themusic.albumcover.jpg",
+  song:"https://mzmdl.com/get/music/20180124/muzmo_ru_Calming_Music_Sanctuary_-_Morocco_Dreams_53060526.mp3",
+  isPlay:false
+},
+
+{
+  name:"Junior Sanchez",
+  artist:"Remix",
+  poster:"https://img.discogs.com/Dfe6Oi-fQGCp05Zh00Sdhj7DyUI=/fit-in/600x600/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-5050762-1383156775-5933.jpeg.jpg",
+  song:"https://mzmdl.com/get/music/20190406/muzmo_ru_Jus_Jack_feat_Black_Dogs_-_Cant_Wait_Junior_Sanchez_and_Dzeko_Torres_Remix_63332342.mp3",
+  isPlay:false
+},
+
+{
+  name:"الوئام الخمسة",
+  artist:"العمل",
+  poster:"https://img.discogs.com/7u90tCxAGjxiE0qK02LvhOyVouI=/fit-in/600x600/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/R-6609816-1423031104-1719.jpeg.jpg",
+  song:"https://cdn1.mzmdl.com/music/20170905/muzmo_ru_Fifth_Harmony_-_Work_from_Home_48201701.mp3",
+  isPlay:false
+},
+
+
+{
+  name:"dack out",
+  artist:"Red",
+  poster:"https://i.pinimg.com/originals/33/de/31/33de31afc955c1d97752e0a6f2bd4e6e.jpg",
+  song:"https://ds.cdn1.mzmdl.com/music/20170830/muzmo_ru_Twenty_One_Pilots_-_Ride_47828700.mp3",
+  isPlay:false
+},
+
+//انسخ هذا 👇 وضعه عدة مرات اذ كنت تريد زيادة المقاطع الموسيقية ضع اسم المغني وصورة الالبوم وواسم الاغنية والمقطع
+{
+  name:"",
+  artist:"",
+  poster:"",
+  song:"",
+  isPlay:false
+}
+
+
+
+
+
+];
+
+
+window.onscroll = function (){
+	
+	var nav = document.getElementById("nav");
+	var textb = document.getElementById("text");
+	
+	  textb.style.transform = "translate(0, -"+window.scrollY/2+"px)"
+	
+	if(window.scrollY >= 145){
+	
+	nav.style.background = "#343436";
+	
+  
+	
+	}else {
+	
+	nav.style.background = "transparent";
+		
+	}
+	
+}
+
+
+
+window.onload = function (){
+	
+	var container = document.getElementById("container");
+	
+	for(var i=0; i<=songs.length - 1; i++){
+	
+	container.innerHTML += markup(i, songs[i].name, songs[i].artist, songs[i].poster);
+	
+	}
+	var pre = document.getElementById("pre");
+   
+   pre.style.display = "none";
+   
+   
+}
+
+
+function opensearch(){
+
+   document.getElementById("sbar").style.right = "0";
+   
+   scrollTo(0, 145);
+	
+}
+
+function openm(){
+	
+	document.getElementById("drop").style.left = "0";
+	
+}
+
+function closem(){
+	
+	document.getElementById("drop").style.left = "-300px";
+	
+}
+
+function closesearch(){
+
+   document.getElementById("sbar").style.right = "-100%";
+   
+   document.getElementById("inp").value = "";
+   
+  var cardc = document.getElementsByClassName("card");
+  
+  for(var i = 0; i<=cardc.length-1; i++){
+	  
+	  cardc[i].style.display = "";
+	  
+  }
+	
+}
+
+
+function search(){
+	var m = document.getElementsByClassName("card");
+	var inp = document.getElementById("inp").value.toUpperCase();
+for (var i = 0; i <= m.length-1; i++){
+	if(m[i].innerHTML.toUpperCase().indexOf(inp) != -1 ){
+		m[i].style.display = "";
+	}else {
+		 m[i].style.display = "none";
+	}
+  }
+}
+
+
+function mint(){
+var isPlaying = aud.currentTime > 0 && !aud.paused && !aud.ended && aud.readyState > 2; 
+	
+	if (isPlaying) {  
+	aud.currentTime = aud.currentTime-10;
+	}
+}
+
+
+function maxt(){
+var isPlaying = aud.currentTime > 0 && !aud.paused && !aud.ended && aud.readyState > 2; 
+	
+	if (isPlaying) {  
+	aud.currentTime = aud.currentTime+10;
+	}
+}
+
+
+
+
+
+
+function play(e, i){
+
+
+	
+	if(songs[i].isPlay == false){
+	
+	var loadmusic = document.getElementById("loadmusic");
+	
+	loadmusic.style.transform = "scaleY(1)";
+	
+	
+	aud.addEventListener('loadeddata', function() {
+	
+	loadmusic.style.transform = "scaleY(0)";
+	   
+	}, false);
+	
+	
+	if(lastsong == null){
+		
+		e.innerHTML = "<i class='material-icons'>pause</i>";
+		
+		aud.src = songs[i].song;
+		
+		aud.play();
+		
+		songs[i].isPlay = true;
+		
+		lastsong = i;
+		
+		}else {
+			
+			songs[lastsong].isPlay = false;
+			
+			document.getElementById("playbtn"+lastsong).innerHTML = "<i class='material-icons'>play_arrow</i>";
+			
+			e.innerHTML = "<i class='material-icons'>pause</i>";
+		
+		aud.src = songs[i].song;
+		
+		aud.play();
+		
+		songs[i].isPlay = true;
+		
+		lastsong = i;
+			
+		}
+		
+		
+		
+	}else {
+	
+	var isPlaying = aud.currentTime > 0 && !aud.paused && !aud.ended && aud.readyState > 2; 
+	
+	if (isPlaying) {  
+		
+		e.innerHTML = "<i class='material-icons'>play_arrow</i>";
+		
+		songs[i].isPlay = false;
+		
+		aud.pause();
+		
+		lastsong = null;
+		
+		}
+	}
+}
+
+</script>
+
+</body>
+</html>
